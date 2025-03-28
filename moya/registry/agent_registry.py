@@ -6,7 +6,7 @@ while offering discovery methods and a higher-level interface.
 """
 
 from typing import List, Optional
-from moya.agents.base_agent import Agent
+from moya.agents.agent import Agent
 from moya.agents.agent_info import AgentInfo
 from moya.registry.base_agent_repository import BaseAgentRepository
 from moya.registry.in_memory_agent_repository import InMemoryAgentRepository

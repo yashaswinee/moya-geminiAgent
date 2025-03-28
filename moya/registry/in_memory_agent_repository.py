@@ -7,7 +7,7 @@ Implements the BaseAgentRepository using in-memory Python data structures.
 from typing import Dict, List, Optional
 
 from moya.agents.agent_info import AgentInfo
-from moya.agents.base_agent import Agent
+from moya.agents.agent import Agent
 from moya.registry.base_agent_repository import BaseAgentRepository
 
 

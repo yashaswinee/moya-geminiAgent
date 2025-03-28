@@ -9,10 +9,14 @@ to generate responses, pulling API key from the environment.
 import os
 from openai import AzureOpenAI
 from dataclasses import dataclass
-from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 
 from typing import Any, Dict, List, Optional
 from moya.agents.openai_agent import OpenAIAgent, OpenAIAgentConfig
+try :
+    from azure.identity import DefaultAzureCredential, get_bearer_token_provider
+except ImportError:
+    raise ImportError("Azure dependencies for Moya are not installed. Please install it using 'pip install moya-ai[azure]'.")
+
 
 
 @dataclass

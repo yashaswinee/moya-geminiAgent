@@ -7,7 +7,7 @@ An Agent that communicates with a remote API endpoint to generate responses.
 import requests
 from dataclasses import dataclass, field
 from typing import Any, Dict, Optional, Iterator
-from moya.agents.base_agent import Agent, AgentConfig
+from moya.agents.agent import Agent, AgentConfig
 
 
 @dataclass

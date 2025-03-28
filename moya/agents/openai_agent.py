@@ -12,8 +12,8 @@ from dataclasses import dataclass
 from dataclasses import dataclass
 
 from typing import Any, Dict, List, Optional
-from moya.agents.base_agent import Agent
-from moya.agents.base_agent import AgentConfig
+from moya.agents.agent import Agent, AgentConfig
+
 from moya.tools.base_tool import BaseTool
 from moya.tools.tool_registry import ToolRegistry
 from moya.memory.base_repository import BaseMemoryRepository

@@ -12,6 +12,7 @@ from moya.registry.agent_registry import AgentRegistry
 from moya.orchestrators.simple_orchestrator import SimpleOrchestrator
 from moya.agents.azure_openai_agent import AzureOpenAIAgent, AzureOpenAIAgentConfig
 from moya.conversation.message import Message
+from moya.memory.file_system_repo  import FileSystemRepository
 
 
 
@@ -50,6 +51,7 @@ def setup_agent():
     Returns:
         tuple: A tuple containing the orchestrator and the agent.
     """
+    EphemeralMemory.memory_repository = FileSystemRepository("tmp/moya_memory")
     # Set up memory components
     tool_registry = ToolRegistry()
     EphemeralMemory.configure_memory_tools(tool_registry)

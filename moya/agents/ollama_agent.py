@@ -8,7 +8,7 @@ import requests
 import json
 from typing import Any, Dict, Optional
 from dataclasses import dataclass
-from moya.agents.base_agent import Agent, AgentConfig
+from moya.agents.agent import Agent, AgentConfig
 
 
 class OllamaAgent(Agent):

@@ -9,7 +9,7 @@ An implementation of an orchestrator that follows the ReAct framework:
 
 from typing import Optional
 
-from moya.agents.base_agent import Agent
+from moya.agents.agent import Agent
 from moya.orchestrators.base_orchestrator import BaseOrchestrator
 from moya.registry.agent_registry import AgentRegistry
 from moya.classifiers.base_classifier import BaseClassifier

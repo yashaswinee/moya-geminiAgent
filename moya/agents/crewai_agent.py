@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 from crewai import Agent as CrewAgent, LLM as CrewLLM, Task as CrewTask, Crew
 from typing import Any, Dict, Optional
-from moya.agents.base_agent import Agent, AgentConfig
+from moya.agents.agent import Agent, AgentConfig
 
 os.environ["OTEL_SDK_DISABLED"] = "true"
 
