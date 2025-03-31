@@ -19,7 +19,7 @@ Agents can:
 import abc
 from typing import Any, Dict, List, Optional
 from dataclasses import dataclass
-from moya.tools.base_tool import BaseTool
+from moya.tools.tool import Tool
 from moya.tools.tool_registry import ToolRegistry
 from moya.memory.base_repository import BaseMemoryRepository
 @dataclass

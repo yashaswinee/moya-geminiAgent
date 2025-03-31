@@ -6,7 +6,7 @@ and discovered by agents.
 """
 import json
 from typing import Any, Dict, Optional, List
-from moya.tools.base_tool import BaseTool
+from moya.tools.tool import Tool
 from moya.utils.constants import LLMProviders
 
 
@@ -18,21 +18,21 @@ class ToolRegistry:
     """
 
     def __init__(self):
-        self._tools: Dict[str, BaseTool] = {}
+        self._tools: Dict[str, Tool] = {}
 
-    def register_tool(self, tool: BaseTool) -> None:
+    def register_tool(self, tool: Tool) -> None:
         """
         Register a tool. If a tool with the same name exists, it gets overwritten.
         """
         self._tools[tool.name] = tool
 
-    def get_tool(self, tool_name: str) -> Optional[BaseTool]:
+    def get_tool(self, tool_name: str) -> Optional[Tool]:
         """
         Retrieve a registered tool by name.
         """
         return self._tools.get(tool_name)
 
-    def get_tools(self) -> List[BaseTool]:
+    def get_tools(self) -> List[Tool]:
         """
         Returns the tool definition in a format compatible with the specified LLM provider.
         

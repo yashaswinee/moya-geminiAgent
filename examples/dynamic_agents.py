@@ -10,14 +10,14 @@ from moya.orchestrators.multi_agent_orchestrator import MultiAgentOrchestrator
 from moya.registry.agent_registry import AgentRegistry
 from moya.memory.in_memory_repository import InMemoryRepository
 from moya.tools.tool_registry import ToolRegistry
-from moya.tools.base_tool import BaseTool
+from moya.tools.tool import Tool
 from moya.tools.ephemeral_memory import EphemeralMemory 
 
 def setup_memory_components():
     """Set up shared memory components."""
     tool_registry = ToolRegistry()
     EphemeralMemory.configure_memory_tools(tool_registry)
-    tool_registry.register_tool(BaseTool(name="ReverseTool", function=reverse_text_tool))
+    tool_registry.register_tool(Tool(name="ReverseTool", function=reverse_text_tool))
     return tool_registry
 
 def reverse_text_tool(text: str) -> str:

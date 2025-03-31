@@ -12,7 +12,7 @@ from moya.memory.file_system_repo import FileSystemRepository
 import os
 import json
 from examples.quick_tools import QuickTools
-from moya.tools.base_tool import BaseTool
+from moya.tools.tool import Tool
 
 
 def setup_agent():
@@ -20,7 +20,7 @@ def setup_agent():
     tool_registry = ToolRegistry()
     # EphemeralMemory.memory_repository = FileSystemRepository(base_path="/Users/kannan/tmp/moya_memory")
     EphemeralMemory.configure_memory_tools(tool_registry)
-    tool_registry.register_tool(BaseTool(name="ConversationContext", function=QuickTools.get_conversation_context))
+    tool_registry.register_tool(Tool(name="ConversationContext", function=QuickTools.get_conversation_context))
 
     config = OpenAIAgentConfig(
         agent_name="chat_agent",

@@ -5,7 +5,7 @@ Interactive chat example using OpenAI agent with conversation memory.
 import os
 import random
 from moya.conversation.thread import Thread
-from moya.tools.base_tool import BaseTool
+from moya.tools.tool import Tool
 from moya.tools.ephemeral_memory import EphemeralMemory
 from moya.tools.tool_registry import ToolRegistry
 from moya.registry.agent_registry import AgentRegistry
@@ -56,7 +56,7 @@ def setup_agent():
     tool_registry = ToolRegistry()
     EphemeralMemory.configure_memory_tools(tool_registry)
 
-    reverse_text_tool = BaseTool(
+    reverse_text_tool = Tool(
         name="reverse_text_tool",
         description="Tool to reverse any given text",
         function=reverse_text,
@@ -70,7 +70,7 @@ def setup_agent():
     )
     tool_registry.register_tool(reverse_text_tool)
 
-    fetch_weather_data_tool = BaseTool(
+    fetch_weather_data_tool = Tool(
         name="fetch_weather_data_tool",
         description="Tool to fetch weather data for a location",
         function=fetch_weather_data,

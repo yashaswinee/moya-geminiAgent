@@ -8,7 +8,7 @@ from moya.registry.agent_registry import AgentRegistry
 from moya.orchestrators.simple_orchestrator import SimpleOrchestrator
 from moya.agents.bedrock_agent import BedrockAgent, BedrockAgentConfig
 from moya.tools.ephemeral_memory import EphemeralMemory
-from moya.tools.base_tool import BaseTool
+from moya.tools.tool import Tool
 
 
 def setup_agent():
