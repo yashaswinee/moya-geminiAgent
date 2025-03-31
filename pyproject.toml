@@ -59,9 +59,15 @@ all = [
     "uvicorn>=0.34.0",
     "python-dotenv>=1.0.1",
     "openai>=1.60.1",
-    "azure-identity>=1.21.0"
+    "azure-identity>=1.21.0",
+    "mkdocs>=1.4.0",
+    "mkdocs-material>=9.0.0"
 ]
 
+docs = [
+    "mkdocs>=1.4.0",
+    "mkdocs-material>=9.0.0"
+]
 
 [tool.setuptools]
 packages = [
@@ -75,3 +81,4 @@ packages = [
     "moya.tools",
     "moya.utils"
 ]
+
