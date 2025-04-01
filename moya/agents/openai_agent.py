@@ -16,7 +16,7 @@ from moya.agents.agent import Agent, AgentConfig
 
 from moya.tools.tool import Tool
 from moya.tools.tool_registry import ToolRegistry
-from moya.memory.base_repository import BaseMemoryRepository
+from moya.memory.repository import Repository
 
 @dataclass
 class OpenAIAgentConfig(AgentConfig):

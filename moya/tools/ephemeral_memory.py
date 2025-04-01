@@ -1,7 +1,7 @@
 """
 MemoryTool for Moya.
 
-A tool that interacts with a BaseMemoryRepository to store and retrieve
+A tool that interacts with a Repository to store and retrieve
 conversation data (threads, messages).
 """
 

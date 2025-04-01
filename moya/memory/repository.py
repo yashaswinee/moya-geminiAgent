@@ -1,5 +1,5 @@
 """
-Base repository for conversation memory in Moya.
+Repository for conversation memory in Moya.
 
 Defines an abstract class describing how to store and retrieve conversation
 Threads (and their Messages).
@@ -11,7 +11,7 @@ from moya.conversation.thread import Thread
 from moya.conversation.message import Message
 
 
-class BaseMemoryRepository(abc.ABC):
+class Repository(abc.ABC):
     """
     Abstract interface for storing and retrieving conversation threads
     (and messages within those threads).

@@ -1,17 +1,17 @@
 """
 InMemoryRepository for conversation memory in Moya.
 
-A simple implementation of BaseMemoryRepository that stores threads
+A simple implementation of Repository that stores threads
 and messages in a Python dictionary (RAM only).
 """
 
 from typing import Dict, Optional, List
 from moya.conversation.thread import Thread
 from moya.conversation.message import Message
-from moya.memory.base_repository import BaseMemoryRepository
+from moya.memory.repository import Repository
 
 
-class InMemoryRepository(BaseMemoryRepository):
+class InMemoryRepository(Repository):
     """
     Maintains an in-memory dictionary of Thread objects.
     Dictionary Key: thread_id, Value: Thread
