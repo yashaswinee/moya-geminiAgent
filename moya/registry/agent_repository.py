@@ -1,5 +1,5 @@
 """
-BaseAgentRepository for Moya.
+AgentRepository for Moya.
 
 Defines an abstract class that describes the interface for storing and
 retrieving Agent instances. Future implementations might store agents
@@ -13,7 +13,7 @@ from moya.agents.agent_info import AgentInfo
 from moya.agents.agent import Agent
 
 
-class BaseAgentRepository(abc.ABC):
+class AgentRepository(abc.ABC):
     """
     Abstract interface for an Agent storage system.
     """

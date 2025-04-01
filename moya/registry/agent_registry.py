@@ -1,14 +1,14 @@
 """
 AgentRegistry for Moya.
 
-The AgentRegistry delegates to a BaseAgentRepository for actual storage
+The AgentRegistry delegates to a AgentRepository for actual storage
 while offering discovery methods and a higher-level interface.
 """
 
 from typing import List, Optional
 from moya.agents.agent import Agent
 from moya.agents.agent_info import AgentInfo
-from moya.registry.base_agent_repository import BaseAgentRepository
+from moya.registry.agent_repository import AgentRepository
 from moya.registry.in_memory_agent_repository import InMemoryAgentRepository
 
 
@@ -18,9 +18,9 @@ class AgentRegistry:
     and provides methods to register, remove, and discover them at runtime.
     """
 
-    def __init__(self, repository: Optional[BaseAgentRepository] = None):
+    def __init__(self, repository: Optional[AgentRepository] = None):
         """
-        :param repository: A BaseAgentRepository instance. If not provided,
+        :param repository: A AgentRepository instance. If not provided,
                            defaults to an InMemoryAgentRepository.
         """
         self.repository = repository or InMemoryAgentRepository()
