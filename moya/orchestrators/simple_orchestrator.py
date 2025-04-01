@@ -8,11 +8,11 @@ A reference implementation of a basic orchestrator that:
 """
 
 from typing import Optional
-from moya.orchestrators.base_orchestrator import BaseOrchestrator
+from moya.orchestrators.orchestrator import Orchestrator
 from moya.registry.agent_registry import AgentRegistry
 
 
-class SimpleOrchestrator(BaseOrchestrator):
+class SimpleOrchestrator(Orchestrator):
     """
     A naive orchestrator that picks a single agent or a simple list of
     agents to handle each user message. The logic here can be as simple

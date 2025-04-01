@@ -1,107 +1,61 @@
-# Orchestrators in Moya
+# Moya Orchestrators
 
-Orchestrators in Moya are responsible for coordinating the actions of multiple agents. They enable complex workflows by managing interactions between agents and ensuring tasks are executed in the correct sequence.
+Orchestrators in Moya coordinate the flow of messages between users and agents. They are responsible for:
 
-## Overview
+1. Receiving and routing user messages to the appropriate agent(s)
+2. Managing conversation context and history
+3. Combining responses from multiple agents when needed
+4. Implementing custom workflows and agent collaboration patterns
 
-Orchestrators serve the following purposes:
+This guide introduces the available orchestrators and explains how to use them effectively.
 
-- **Task Coordination**: Manage the flow of tasks between agents.
-- **Collaboration**: Facilitate collaboration between multiple agents to solve complex problems.
-- **Workflow Management**: Define and execute workflows involving multiple steps and agents.
+## Orchestrator Types
 
-## Key Components
+### 1. Orchestrator
 
-### 1. BaseOrchestrator
+The `Orchestrator` class provides the foundation for all orchestrator implementations in Moya. It defines the basic structure and methods that all orchestrators must implement.
 
-**File:** `moya/orchestrators/base_orchestrator.py`
-
-The `BaseOrchestrator` class provides the foundation for all orchestrator implementations in Moya. It defines the basic structure and methods that all orchestrators must implement.
-
-#### Key Methods:
-- `add_agent(agent: Agent) -> None`: Adds an agent to the orchestrator.
-- `execute_workflow(workflow: dict) -> Any`: Executes a workflow defined as a dictionary.
-
-#### Example Usage:
 ```python
-from moya.orchestrators.base_orchestrator import BaseOrchestrator
+from moya.orchestrators.orchestrator import Orchestrator
 
-class CustomOrchestrator(BaseOrchestrator):
-    def __init__(self):
-        self.agents = []
-
-    def add_agent(self, agent):
-        self.agents.append(agent)
-
-    def execute_workflow(self, workflow):
-        # Custom workflow execution logic
-        return "Workflow executed"
-
-orchestrator = CustomOrchestrator()
-orchestrator.add_agent("Agent1")
-print(orchestrator.execute_workflow({"task": "example"}))
+class CustomOrchestrator(Orchestrator):
+    def orchestrate(self, thread_id: str, user_message: str, **kwargs) -> str:
+        # Your custom orchestration logic here
+        pass
 ```
 
-### 2. SequentialOrchestrator
+### 2. SimpleOrchestrator
 
-**File:** `moya/orchestrators/sequential_orchestrator.py`
+**File:** `moya/orchestrators/simple_orchestrator.py`
 
-The `SequentialOrchestrator` class executes tasks in a sequential manner. It ensures that each task is completed before moving on to the next.
-
-#### Key Features:
-- Executes tasks in a predefined order.
-- Supports error handling for individual tasks.
+The `SimpleOrchestrator` class is a straightforward implementation of the `Orchestrator` class. It is designed for simple use cases where a single agent is responsible for handling user messages.
 
 #### Example Usage:
 ```python
-from moya.orchestrators.sequential_orchestrator import SequentialOrchestrator
+from moya.orchestrators.simple_orchestrator import SimpleOrchestrator
 
-orchestrator = SequentialOrchestrator()
-orchestrator.add_agent("Agent1")
-orchestrator.add_agent("Agent2")
-result = orchestrator.execute_workflow({"tasks": ["task1", "task2"]})
-print(result)
-```
+class MyAgent:
+    def respond(self, message):
+        return f"Response to: {message}"
 
-### 3. ParallelOrchestrator
-
-**File:** `moya/orchestrators/parallel_orchestrator.py`
-
-The `ParallelOrchestrator` class executes tasks in parallel. It is useful for workflows where tasks can be performed independently.
-
-#### Key Features:
-- Executes tasks concurrently.
-- Aggregates results from all tasks.
-
-#### Example Usage:
-```python
-from moya.orchestrators.parallel_orchestrator import ParallelOrchestrator
-
-orchestrator = ParallelOrchestrator()
-orchestrator.add_agent("Agent1")
-orchestrator.add_agent("Agent2")
-result = orchestrator.execute_workflow({"tasks": ["task1", "task2"]})
-print(result)
+orchestrator = SimpleOrchestrator()
+orchestrator.set_agent(MyAgent())
+response = orchestrator.orchestrate("thread_id", "Hello, agent!")
+print(response)
 ```
 
 ## Custom Orchestrators
 
-You can create custom orchestrators by extending the `BaseOrchestrator` class. This allows you to implement workflows tailored to your specific use case.
+You can create custom orchestrators by extending the `Orchestrator` class. This allows you to implement workflows tailored to your specific use case.
 
 #### Example:
 ```python
-from moya.orchestrators.base_orchestrator import BaseOrchestrator
+from moya.orchestrators.orchestrator import Orchestrator
 
-class CustomOrchestrator(BaseOrchestrator):
-    def __init__(self):
-        self.agents = []
-
-    def add_agent(self, agent):
-        self.agents.append(agent)
-
-    def execute_workflow(self, workflow):
-        # Custom workflow execution logic
-        return "Custom workflow executed"
+class CustomOrchestrator(Orchestrator):
+    def orchestrate(self, thread_id: str, user_message: str, **kwargs) -> str:
+        # Your custom orchestration logic here
+        pass
 
 orchestrator = CustomOrchestrator()
 orchestrator.add_agent("Agent1")
