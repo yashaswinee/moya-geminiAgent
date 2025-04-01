@@ -1,11 +1,11 @@
 from typing import List, Optional
 
 from moya.agents.agent_info import AgentInfo
-from moya.classifiers.base_classifier import BaseClassifier
+from moya.classifiers.classifier import Classifier
 from moya.agents.agent import Agent
 
 
-class LLMClassifier(BaseClassifier):
+class LLMClassifier(Classifier):
     """LLM-based classifier for agent selection."""
 
     def __init__(self, llm_agent: Agent, default_agent: str):
