@@ -4,7 +4,7 @@ from typing import List, Optional
 from moya.agents.agent_info import AgentInfo
 
 
-class BaseClassifier(ABC):
+class Classifier(ABC):
     """Base class for agent classifiers."""
     
     @abstractmethod

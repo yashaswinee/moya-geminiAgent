@@ -8,19 +8,16 @@ from moya.agents.openai_agent import OpenAIAgent, OpenAIAgentConfig
 from moya.classifiers.llm_classifier import LLMClassifier
 from moya.orchestrators.multi_agent_orchestrator import MultiAgentOrchestrator
 from moya.registry.agent_registry import AgentRegistry
-from moya.tools.memory_tool import MemoryTool
 from moya.memory.in_memory_repository import InMemoryRepository
 from moya.tools.tool_registry import ToolRegistry
-from moya.tools.base_tool import BaseTool
+from moya.tools.tool import Tool
 from moya.tools.ephemeral_memory import EphemeralMemory 
 
 def setup_memory_components():
     """Set up shared memory components."""
-   # memory_repo = InMemoryRepository()
-   # memory_tool = MemoryTool(memory_repository=memory_repo)
     tool_registry = ToolRegistry()
     EphemeralMemory.configure_memory_tools(tool_registry)
-    tool_registry.register_tool(BaseTool(name="ReverseTool", function=reverse_text_tool))
+    tool_registry.register_tool(Tool(name="ReverseTool", function=reverse_text_tool))
     return tool_registry
 
 def reverse_text_tool(text: str) -> str:
@@ -182,17 +179,7 @@ def main():
         last_agent = registry.get_agent(agents[0].name)
 
         # Store the user message first
-        if last_agent.tool_registry:
-            try:
-                last_agent.call_tool(
-                    tool_name="MemoryTool",
-                    method_name="store_message",
-                    thread_id=thread_id,
-                    sender="user",
-                    content=user_message
-                )
-            except Exception as e:
-                print(f"Error storing user message: {e}")
+        EphemeralMemory.store_message(thread_id=thread_id, sender="user", content=user_message)
 
         # Get conversation context
         previous_messages = last_agent.get_last_n_messages(thread_id, n=5)

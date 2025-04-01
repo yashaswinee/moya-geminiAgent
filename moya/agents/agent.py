@@ -12,16 +12,17 @@ Agents can:
 - Dynamically call external tools via 'call_tool()',
 - Discover available tools via 'discover_tools()',
 - Optionally retrieve conversation memory (summary, last n messages)
-  through a MemoryTool if registered in the tool registry.
+  through a MemoryTool if registered in the Tool registry.
 """
 
 
 import abc
 from typing import Any, Dict, List, Optional
 from dataclasses import dataclass
-from moya.tools.base_tool import BaseTool
+from moya.tools.tool import Tool
 from moya.tools.tool_registry import ToolRegistry
-from moya.memory.base_repository import BaseMemoryRepository
+from moya.memory.repository import Repository
+
 @dataclass
 class AgentConfig:
     """
@@ -33,7 +34,7 @@ class AgentConfig:
     system_prompt: str = "You are a helpful AI assistant."
     llm_config: Optional[Dict[str, Any]] = None
     tool_registry: Optional[ToolRegistry] = None
-    memory: Optional[BaseMemoryRepository] = None
+    memory: Optional[Repository] = None
     is_tool_caller: bool = False
     is_streaming: bool = False
 

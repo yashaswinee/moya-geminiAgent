@@ -3,17 +3,15 @@ from moya.agents.openai_agent import OpenAIAgent, OpenAIAgentConfig
 from moya.classifiers.llm_classifier import LLMClassifier
 from moya.orchestrators.react_orchestrator import ReActOrchestrator
 from moya.registry.agent_registry import AgentRegistry
-from moya.tools.memory_tool import MemoryTool
-from moya.memory.in_memory_repository import InMemoryRepository
+from moya.tools.ephemeral_memory import EphemeralMemory
 from moya.tools.tool_registry import ToolRegistry
+import os
 
 
 def setup_memory_components():
     """Set up memory components for the agents."""
-    memory_repo = InMemoryRepository()
-    memory_tool = MemoryTool(memory_repository=memory_repo)
     tool_registry = ToolRegistry()
-    tool_registry.register_tool(memory_tool)
+    EphemeralMemory.configure_memory_tools(tool_registry)
     return tool_registry
 
 
@@ -24,14 +22,19 @@ def create_food_agent(tool_registry) -> OpenAIAgent:
     Give detailed descriptions and provide additional information about the dishes.
     You should not provide any other information except about food."""
 
-    agent = OpenAIAgent(
+    agent_config = OpenAIAgentConfig(
         agent_name="food_agent",
-        agent_config=OpenAIAgentConfig(system_prompt=system_prompt),
+        agent_type="OpenAIAgent",
         description="Food recommendation specialist that provides detailed descriptions of dishes",
-        tool_registry=tool_registry
+        system_prompt=system_prompt,
+        model_name="gpt-4o",
+        api_key=os.getenv("OPENAI_API_KEY"),
+        llm_config={
+            'temperature': 0.7,
+            'max_tokens': 1000
+        }
     )
-    agent.setup()
-    return agent
+    return OpenAIAgent(config=agent_config)
 
 
 def create_attractions_agent(tool_registry) -> OpenAIAgent:
@@ -41,14 +44,22 @@ def create_attractions_agent(tool_registry) -> OpenAIAgent:
     Provide detailed information and tips about the attractions.
     You should not provide any other information except about attractions."""
 
-    agent = OpenAIAgent(
+    agent_config = OpenAIAgentConfig(
         agent_name="attractions_agent",
-        agent_config=OpenAIAgentConfig(system_prompt=system_prompt),
+        agent_type="OpenAIAgent",
         description="Local attractions expert that recommends the best places to visit",
-        tool_registry=tool_registry
+        system_prompt=system_prompt,
+        model_name="gpt-4o",
+        api_key=os.getenv("OPENAI_API_KEY"),
+        llm_config={
+            'temperature': 0.7,
+            'max_tokens': 1000
+        }
     )
-    agent.setup()
-    return agent
+
+    return OpenAIAgent(
+        config=agent_config
+    )
 
 
 def create_country_agent(tool_registry) -> OpenAIAgent:
@@ -58,14 +69,21 @@ def create_country_agent(tool_registry) -> OpenAIAgent:
     Offer advice and tips for travelers visiting your country.
     You should only provide information about the country asked for, and politely decline if asked about anything else."""
 
-    agent = OpenAIAgent(
+    agent_config = OpenAIAgentConfig(
         agent_name="country_agent",
-        agent_config=OpenAIAgentConfig(system_prompt=system_prompt),
+        agent_type="OpenAIAgent",
         description="Country expert that provides information about culture, customs, and travel tips",
-        tool_registry=tool_registry
+        system_prompt=system_prompt,
+        model_name="gpt-4o",
+        api_key=os.getenv("OPENAI_API_KEY"),
+        llm_config={
+            'temperature': 0.7,
+            'max_tokens': 1000
+        }
     )
-    agent.setup()
-    return agent
+    return OpenAIAgent(
+        config=agent_config
+    )
 
 
 def create_language_agent(tool_registry) -> OpenAIAgent:
@@ -75,39 +93,60 @@ def create_language_agent(tool_registry) -> OpenAIAgent:
     Help users learn and understand your language better. 
     You should only provide translations and explanations; no other information."""
 
-    agent = OpenAIAgent(
+    agent_config = OpenAIAgentConfig(
         agent_name="language_agent",
-        agent_config=OpenAIAgentConfig(system_prompt=system_prompt),
+        agent_type="OpenAIAgent",
         description="Language expert that provides translations and explanations of common phrases",
-        tool_registry=tool_registry
+        system_prompt=system_prompt,
+        model_name="gpt-4o",
+        api_key=os.getenv("OPENAI_API_KEY"),
+        llm_config={
+            'temperature': 0.7,
+            'max_tokens': 1000
+        }
     )
-    agent.setup()
-    return agent
+    return OpenAIAgent(
+        config=agent_config
+    )
 
 
 def create_classifier_agent() -> OpenAIAgent:
     """Create a classifier agent for language and task detection."""
     system_prompt = """You are a classifier. Your job is to determine the best agent based on the user's message. """
 
-    agent = OpenAIAgent(
+    agent_config = OpenAIAgentConfig(
         agent_name="classifier",
-        agent_config=OpenAIAgentConfig(system_prompt=system_prompt),
-        description="Language and task classifier for routing messages"
+        agent_type="OpenAIAgent",
+        description="Language and task classifier for routing messages",
+        system_prompt=system_prompt,
+        model_name="gpt-4o",
+        api_key=os.getenv("OPENAI_API_KEY"),
+        llm_config={
+            'temperature': 0.7,
+            'max_tokens': 1000
+        }
     )
-    agent.setup()
-    return agent
+    return OpenAIAgent(
+        config=agent_config
+    )
 
 
 def create_llm_agent():
-    llm_agent = OpenAIAgent(
-        agent_name="LLM",
-        description="An simple LLM processor",
-        agent_config=OpenAIAgentConfig(
-            system_prompt="You are a helpful LLM agent."
-        )
+    agent_config = OpenAIAgentConfig(
+        agent_name="llm_agent",
+        agent_type="OpenAIAgent",
+        description="An LLM processor that can process any input.",
+        system_prompt="You are a helpful assistant that can process any input.",
+        model_name="gpt-4o",
+        api_key=os.getenv("OPENAI_API_KEY"),
+        llm_config={
+            'temperature': 0.7,
+            'max_tokens': 1000
+        }
     )
-    llm_agent.setup()
-    return llm_agent
+    return OpenAIAgent(
+        config=agent_config
+    )
 
 
 def setup_orchestrator():

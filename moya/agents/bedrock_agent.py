@@ -8,7 +8,7 @@ pulling AWS credentials from environment or AWS configuration.
 import json
 import boto3
 from typing import Any, Dict, Optional
-from moya.agents.base_agent import Agent, AgentConfig
+from moya.agents.agent import Agent, AgentConfig
 from dataclasses import dataclass
 
 

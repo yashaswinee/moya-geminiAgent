@@ -5,7 +5,7 @@ Interactive chat example using OpenAI agent with conversation memory.
 import os
 from moya.memory.in_memory_repository import InMemoryRepository
 from moya.tools.tool_registry import ToolRegistry
-from moya.tools.memory_tool import MemoryTool
+from moya.tools.ephemeral_memory import EphemeralMemory
 from moya.registry.agent_registry import AgentRegistry
 from moya.orchestrators.simple_orchestrator import SimpleOrchestrator
 from moya.agents.crewai_agent import CrewAIAgent, CrewAIAgentConfig
@@ -13,10 +13,8 @@ from moya.agents.crewai_agent import CrewAIAgent, CrewAIAgentConfig
 
 def setup_agent():
     # Set up memory components
-    memory_repo = InMemoryRepository()
-    memory_tool = MemoryTool(memory_repository=memory_repo)
     tool_registry = ToolRegistry()
-    tool_registry.register_tool(memory_tool)
+    EphemeralMemory.configure_memory_tools(tool_registry)
 
     # Create OpenAI agent with memory capabilities
     agent = CrewAIAgent(
@@ -66,14 +64,8 @@ def main():
             print("\nGoodbye!")
             break
 
-        # Store the user message first
-        agent.call_tool(
-            tool_name="MemoryTool",
-            method_name="store_message",
-            thread_id=thread_id,
-            sender="user",
-            content=user_input
-        )
+        # Store user message
+        EphemeralMemory.store_message(thread_id=thread_id, sender="user", content=user_input)
 
         # Get conversation context
         previous_messages = agent.get_last_n_messages(thread_id, n=5)
@@ -103,13 +95,7 @@ def main():
         print()
 
         # Store the assistant's response
-        agent.call_tool(
-            tool_name="MemoryTool",
-            method_name="store_message",
-            thread_id=thread_id,
-            sender="assistant",
-            content=response
-        )
+        EphemeralMemory.store_message(thread_id=thread_id, sender="assistant", content=response)
 
 
 if __name__ == "__main__":

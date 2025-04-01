@@ -1,7 +1,7 @@
 """
 FileSystemRepository for conversation memory in Moya.
 
-An implementation of BaseMemoryRepository that stores threads
+An implementation of Repository that stores threads
 as JSON files and messages as JSON lines within those files.
 """
 
@@ -11,10 +11,10 @@ from datetime import datetime
 from typing import Dict, Optional, List, Any, Union
 from moya.conversation.thread import Thread
 from moya.conversation.message import Message
-from moya.memory.base_repository import BaseMemoryRepository
+from moya.memory.repository import Repository
 
 
-class FileSystemRepository(BaseMemoryRepository):
+class FileSystemRepository(Repository):
     """
     Maintains threads as JSON files on disk.
     Each thread is stored as a separate file with thread metadata at the top

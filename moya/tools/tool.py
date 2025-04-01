@@ -1,5 +1,5 @@
 """
-BaseTool for Moya.
+Tool for Moya.
 
 Describes a generic interface for a "tool" that an agent can discover and call.
 """
@@ -9,7 +9,7 @@ from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Optional, get_type_hints
 
 @dataclass
-class BaseTool():
+class Tool():
     name: str
     description: Optional[str] = None
     function: Optional[Callable] = None

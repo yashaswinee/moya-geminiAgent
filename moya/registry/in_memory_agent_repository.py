@@ -1,17 +1,17 @@
 """
 InMemoryAgentRepository for Moya.
 
-Implements the BaseAgentRepository using in-memory Python data structures.
+Implements the AgentRepository using in-memory Python data structures.
 """
 
 from typing import Dict, List, Optional
 
 from moya.agents.agent_info import AgentInfo
-from moya.agents.base_agent import Agent
-from moya.registry.base_agent_repository import BaseAgentRepository
+from moya.agents.agent import Agent
+from moya.registry.agent_repository import AgentRepository
 
 
-class InMemoryAgentRepository(BaseAgentRepository):
+class InMemoryAgentRepository(AgentRepository):
     """
     Stores Agent objects in a simple in-memory dictionary.
     """

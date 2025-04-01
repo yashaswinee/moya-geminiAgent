@@ -1,10 +1,10 @@
 from typing import Optional
-from moya.orchestrators.base_orchestrator import BaseOrchestrator
+from moya.orchestrators.orchestrator import Orchestrator
 from moya.registry.agent_registry import AgentRegistry
-from moya.classifiers.base_classifier import BaseClassifier
+from moya.classifiers.classifier import Classifier
 from moya.tools.ephemeral_memory import EphemeralMemory
 
-class MultiAgentOrchestrator(BaseOrchestrator):
+class MultiAgentOrchestrator(Orchestrator):
     """
     An orchestrator that uses a classifier to route messages to appropriate agents.
     """
@@ -12,7 +12,7 @@ class MultiAgentOrchestrator(BaseOrchestrator):
     def __init__(
         self,
         agent_registry: AgentRegistry,
-        classifier: BaseClassifier,
+        classifier: Classifier,
         default_agent_name: Optional[str] = None,
         config: Optional[dict] = None
     ):

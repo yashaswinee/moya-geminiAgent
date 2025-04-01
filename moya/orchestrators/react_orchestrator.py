@@ -9,14 +9,14 @@ An implementation of an orchestrator that follows the ReAct framework:
 
 from typing import Optional
 
-from moya.agents.base_agent import Agent
-from moya.orchestrators.base_orchestrator import BaseOrchestrator
+from moya.agents.agent import Agent
+from moya.orchestrators.orchestrator import Orchestrator
 from moya.registry.agent_registry import AgentRegistry
-from moya.classifiers.base_classifier import BaseClassifier
+from moya.classifiers.classifier import Classifier
 import os
 
 
-class ReActOrchestrator(BaseOrchestrator):
+class ReActOrchestrator(Orchestrator):
     """
     An orchestrator that follows the ReAct framework to handle user messages.
     """
@@ -24,7 +24,7 @@ class ReActOrchestrator(BaseOrchestrator):
     def __init__(
         self,
         agent_registry: AgentRegistry,
-        classifier: BaseClassifier,
+        classifier: Classifier,
         llm_agent: Agent,
         default_agent_name: Optional[str] = None,
         config: Optional[dict] = {},

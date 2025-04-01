@@ -1,13 +1,13 @@
 """
 MemoryTool for Moya.
 
-A tool that interacts with a BaseMemoryRepository to store and retrieve
+A tool that interacts with a Repository to store and retrieve
 conversation data (threads, messages).
 """
 
 from typing import Optional, List, Dict, Any
 from moya.tools.tool_registry import ToolRegistry
-from moya.tools.base_tool import BaseTool
+from moya.tools.tool import Tool
 from moya.memory.in_memory_repository import InMemoryRepository
 from moya.conversation.thread import Thread
 from moya.conversation.message import Message
@@ -106,6 +106,6 @@ class EphemeralMemory:
         Parameters:
             - tool_registry: The tool registry to register the MemoryTool with.
         """
-        tool_registry.register_tool(BaseTool(name="Store", function = EphemeralMemory.store_message))
-        tool_registry.register_tool(BaseTool(name="get_last_n", function=EphemeralMemory.get_last_n_messages))
-        tool_registry.register_tool(BaseTool(name="get_summary", function=EphemeralMemory.get_thread_summary))
+        tool_registry.register_tool(Tool(name="Store", function = EphemeralMemory.store_message))
+        tool_registry.register_tool(Tool(name="get_last_n", function=EphemeralMemory.get_last_n_messages))
+        tool_registry.register_tool(Tool(name="get_summary", function=EphemeralMemory.get_thread_summary))

@@ -1,5 +1,5 @@
 """
-BaseOrchestrator for Moya.
+Orchestrator for Moya.
 
 Defines an abstract class that orchestrates conversations between
 users (or other agents) and registered Moya agents.
@@ -11,9 +11,9 @@ from typing import Any, Optional
 from moya.registry.agent_registry import AgentRegistry
 
 
-class BaseOrchestrator(abc.ABC):
+class Orchestrator(abc.ABC):
     """
-    BaseOrchestrator coordinates message flow among one or more agents
+    Orchestrator coordinates message flow among one or more agents
     in response to user or agent-initiated messages.
 
     Responsibilities:

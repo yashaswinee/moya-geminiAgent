@@ -8,7 +8,7 @@ from moya.tools.tool_registry import ToolRegistry
 from moya.tools.ephemeral_memory import EphemeralMemory
 from moya.registry.agent_registry import AgentRegistry
 from moya.orchestrators.simple_orchestrator import SimpleOrchestrator
-from moya.agents.base_agent import AgentConfig
+from moya.agents.agent import AgentConfig
 from moya.agents.ollama_agent import OllamaAgent
 from moya.conversation.message import Message
 from moya.conversation.thread import Thread
