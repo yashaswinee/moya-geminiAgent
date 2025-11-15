@@ -43,7 +43,7 @@ class LLMClassifier(Classifier):
         response = self.llm_agent.handle_message(prompt, thread_id=thread_id)
 
         # Clean up response and validate
-        selected_agent = response.strip()
+        selected_agent = response
 
         if selected_agent not in [agent.name for agent in available_agents]:
             return self.default_agent
