@@ -4,14 +4,19 @@ GeminiAgent for Moya.
 An Agent that uses Google's Gemini API to generate responses.
 """
 
-import os
-import re
+import traceback
 import google.generativeai as genai
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Iterator
+from typing import Any, Dict, Optional
 from moya.agents.agent import Agent, AgentConfig
-import json
-import google.generativeai as genai
+from moya.agents.gemini_summarizer_agent import create_summarizer_prompt
+from moya.agents.gemini_agent_helpers import (
+    parse_filter_response,
+    extract_filter_values,
+    retrieve_documents_by_filter,
+    perform_general_search,
+    flatten_documents,
+)
 
 
 @dataclass
@@ -77,123 +82,54 @@ class GeminiAgent(Agent):
         except Exception as e:
             raise ConnectionError(f"Failed to initialize Gemini client: {str(e)}")
 
-    def _get_conversation(self, thread_id):
-        """Get or create a conversation for a specific thread."""
-        if thread_id not in self.conversations:
+    def _get_conversation(self, thread_id, conversation_key="main"):
+        """Get or create a conversation for a specific thread and key."""
+        key = f"{thread_id}_{conversation_key}"
+        if key not in self.conversations:
             convo = self.model.start_chat(history=[])
-            self.conversations[thread_id] = convo
-        return self.conversations[thread_id]
+            self.conversations[key] = convo
+        return self.conversations[key]
 
     def handle_message(self, message: str, **kwargs) -> str:
-        """Generate filter JSON from user message."""
+        """Generate answer from user message by extracting filters and summarizing documents."""
         thread_id = kwargs.get("thread_id", "default")
         
-        try:            
-            # Build prompt for filter generation
+        try:
+            # Step 1: Generate filter JSON from user message (use separate conversation)
             filter_prompt = f"""{self.system_prompt}, User Query: {message}"""
+            filter_convo = self._get_conversation(thread_id, "filter")
+            filter_response = filter_convo.send_message(filter_prompt)
             
-            # Get conversation
-            convo = self._get_conversation(thread_id)
+            # Parse filter response
+            filter_dict = parse_filter_response(filter_response.text)
+            paper_ids, sections = extract_filter_values(filter_dict)
             
-            # Make Gemini API call
-            response = convo.send_message(filter_prompt)
-                        
-            # Extract text from response
-            filter_string = response.text.strip()
-            
-            # Clean up response (remove markdown code blocks if present)
-            filter_string = filter_string.replace("```json", "").replace("```", "").strip()
-            
-            try:
-                filter_dict = json.loads(filter_string)
-            except json.JSONDecodeError:
-                filter_dict = {"$and": []}
-            
-            
-            # Extract paper_id and section_category from the parsed dict
-            paper_ids = [item.get("paper_id") for item in filter_dict.get("$and", []) if "paper_id" in item]
-            sections = [item.get("section_category") for item in filter_dict.get("$and", []) if "section_category" in item]
-                        
-            if type(sections[0]) == list:
-                sections=sections[0]
-
-            if type(paper_ids[0]) == list:
-                paper_ids=paper_ids[0]
-
-            # Collect all retrieved documents
-            all_doc_contents = []
-
-            # Loop through all paper_ids
-            for paper_id in paper_ids:
-                # Loop through all sections for each paper
-                for section in sections:
-                    try:
-                        
-                        retrieved_docs = self.persistent_embeddings.search_by_paper(
-                            query=message,
-                            paper_id=paper_id,
-                            section_category=section,
-                            k=3
-                        )
-
-                        # Add to collection
-                        all_doc_contents.append(retrieved_docs)
-                        
-                    except Exception as e:
-                        print(f"Error retrieving docs for {paper_id} ... {section}: {str(e)}")
-                        continue            
-                            
-            # If no papers/sections specified, do a general search
-            if not paper_ids:
+            # Step 2: Retrieve documents from ChromaDB using filters
+            if paper_ids:
+                all_doc_contents = retrieve_documents_by_filter(
+                    self.persistent_embeddings, message, paper_ids, sections
+                )
+            else:
                 print("No paper_ids specified, doing general search")
-                try:
-                    retrieved_docs = self.persistent_embeddings.search(
-                        query=message,
-                        k=5
-                    )
-                    docs_data = json.loads(retrieved_docs)
-                    doc_contents = [result['content'] for result in docs_data.get('results', [])]
-                    all_doc_contents.extend(doc_contents)
-                except Exception as e:
-                    print(f"Error in general search: {str(e)}")
+                all_doc_contents = perform_general_search(
+                    self.persistent_embeddings, message
+                )
 
-            # Check if any content
+            # Check if any content was found
             if not all_doc_contents:
                 return "I couldn't find relevant information to answer your question."
 
-
-            # Flatten the list of documents if it's a list of lists
-            flat_docs = []
-            for item in all_doc_contents:
-                if isinstance(item, list):
-                    # Assuming the items inside the inner list are strings or can be converted to strings
-                    string_items = [str(sub_item) for sub_item in item]
-                    flat_docs.extend(string_items)
-                else:
-                    # Assuming the item itself is a string or can be converted to one
-                    flat_docs.append(str(item))
-
-            all_doc_contents = flat_docs
+            # Step 3: Generate final answer using retrieved documents (use separate conversation)
+            context = flatten_documents(all_doc_contents)
+            final_prompt = create_summarizer_prompt(context=context, user_query=message)
             
-            context = all_doc_contents
-
-            
-            # final prompt
-            final_prompt = (
-                f"You are an expert summariser. Use the provided context to answer the user's question.\n"
-                f"Context: {context}\n"
-                f"User Query: {message}"
-            )
-
-            # Get conversation and send message
-            convo = self._get_conversation(thread_id) 
-            response = convo.send_message(final_prompt)
-                                
-            return response.text
+            # Use a separate conversation for the final answer to avoid filter JSON in history
+            answer_convo = self._get_conversation(thread_id, "answer")
+            answer_response = answer_convo.send_message(final_prompt)
+            return answer_response.text
 
         except Exception as e:
             print(f"Filter agent error: {str(e)}")
-            import traceback
             traceback.print_exc()
             return '{"$and": []}'
 
